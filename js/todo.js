@@ -1,32 +1,44 @@
-const STATUS = { COMPLETE: true, INCOMPLETE: false }
-
+const STATUS = { COMPLETE: 'complete', INCOMPLETE: 'incomplete' };
 
 class ToDoItem {
-
-    constructor(task,isComplete){
-        this.task=task;
-        this.isComplete=isComplete;
+    constructor(obj){
+        this.task = obj.task;
+        this.isComplete = obj.isComplete ? obj.isComplete : STATUS.INCOMPLETE;
     }
     setTaskName(task){
-        this.task=task;
+        this.task = task;
     }
     getTaskName(){return this.task;}
     setIsComplete(isComplete){this.isComplete=isComplete;}
     getIsComplete(){return this.isComplete;}
-
+    generateTaskHtml(index) {
+        return `
+            <li class="list-group-item checkbox">
+            <div class="row">
+                <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 checkbox">
+                <label><input id="checkTodoStatus" type="checkbox" value="" class="" ${this.isComplete === STATUS.COMPLETE ? 'checked' : ''}></label>
+                </div>
+                <div class="col-md-10 col-xs-10 col-lg-10 col-sm-10 task-text ${this.isComplete === STATUS.COMPLETE ? 'complete' : ''}">
+                ${this.task}
+                </div>
+                <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 delete-icon-area">
+                <a class="" href="" ><i id="deleteTaskTodoList" data-id="${index}" class="delete-icon glyphicon glyphicon-trash"></i></a>
+                </div>
+            </div>
+            </li>
+        `;
+    }
 }
 
 class ToDoClass {
     constructor() {
-
         this.tasks = JSON.parse(localStorage.getItem('TASK_ID'));
-        /*  if (!this.tasks) {
-            this.tasks = [
-                { task: 'Review code', isComplete: false },
-                { task: 'Commit code', isComplete: true },
+        if (!this.tasks) {
+            this.tasks = [];
+        }
 
-            ];
-        }  */
+        // Convert todo items to TodoItem class
+        this.tasks = this.tasks.map(todoItem => new ToDoItem(todoItem));
 
         this.loadToDoList();
         this.addEventListener();
@@ -34,7 +46,7 @@ class ToDoClass {
 
     addEventListener() {
         document.getElementById('addTask').addEventListener('keypress', event => {
-            if (event.keyCode === 13) {
+            if (event.keyCode == 13) {
                 this.addTask(event.target.value);
                 event.target.value = "";
             }
@@ -66,7 +78,7 @@ class ToDoClass {
             task,
             isComplete: false,
         }; */
-
+        
         //parent div is simply uses to add the effects around the insert label if there is a text or not
         let parentDiv = document.getElementById('addTask').parentElement;
         if (task === '') {
@@ -77,10 +89,11 @@ class ToDoClass {
 
             //add first: unshift()  
             //add last: push()
-
-            toDoItem.setTaskName(task);
-            toDoItem.setIsComplete(false);
-            this.tasks.push(toDoItem);
+            const todoItem = new ToDoItem({
+                task, isComplete: STATUS.INCOMPLETE
+            });
+           
+            this.tasks.push(todoItem);
             this.loadToDoList();
         }
     }
@@ -104,24 +117,8 @@ class ToDoClass {
         this.load_gen(list_complete);
     }
 
-    generateTaskHtml(task, index) {
-        return `
-            <li class="list-group-item checkbox">
-            <div class="row">
-                <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 checkbox">
-                <label><input id="checkTodoStatus" type="checkbox" onchange="toDoList.checkTodoStatus(${index})" value="" class="" ${task.isComplete ? 'checked' : ''}></label>
-                </div>
-                <div class="col-md-10 col-xs-10 col-lg-10 col-sm-10 task-text ${task.isComplete ? 'complete' : ''}">
-                ${task.task}
-                </div>
-                <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 delete-icon-area">
-                <a class="" href="" onClick="toDoList.deleteTaskTodoList(event, ${index})"><i id="deleteTaskTodoList" data-id="${index}" class="delete-icon glyphicon glyphicon-trash"></i></a>
-                </div>
-            </div>
-            </li>
-        `;
-    }
-
+    
+    
     //load all task
     loadToDoList() {
         //var tasks= {task: "Review code", isComplete: false}
@@ -130,34 +127,34 @@ class ToDoClass {
         localStorage.setItem('TASK_ID', JSON.stringify(this.tasks));
         let total_task = "Total: " + this.tasks.length + " tasks";
         document.getElementById('total_task').innerHTML = total_task;
-        let taskHtml = this.tasks.reduce((html, task, index) => html += this.generateTaskHtml(task, index), '');
+        let taskHtml = this.tasks.reduce((html, task, index) => html += task.generateTaskHtml(index), '');
         document.getElementById('taskList').innerHTML = taskHtml;
     }
-
+    
+    
     load_gen(list) {
-
+        localStorage.setItem('TASK_ID', JSON.stringify(this.tasks));
+        let total_task = "Total: " + this.tasks.length + " tasks";
         let taskHtml2 = list.reduce((html, task, index) => html += this.generateTaskHtml(task, index), '');
         document.getElementById('taskList').innerHTML = taskHtml2;
     }
    
 }
 
-let toDoItem;
 let toDoList;
 window.addEventListener("load", () => {
     toDoList = new ToDoClass();
-    toDoItem = new ToDoItem();
 });
 
 //check localstorage
-if (typeof (Storage) !== 'undefined') {
+// if (typeof (Storage) !== 'undefined') {
 
 
-    //var data=localStorage.length;         //total key
-    //localStorage.removeItem('TASK_ID');  //remove key
-    //localStorage.clear();              //delete all item in local storage
+//     //var data=localStorage.length;         //total key
+//     //localStorage.removeItem('TASK_ID');  //remove key
+//     //localStorage.clear();              //delete all item in local storage
 
-    alert("Browser is support LocalStorage");
-} else {
-    alert("Browser isn't support LocalStorage");
-}
+//     alert("Browser is support LocalStorage");
+// } else {
+//     alert("Browser isn't support LocalStorage");
+// }
