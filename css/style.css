@@ -66,3 +66,9 @@ body {
 .all_div{
   margin-left: 5px;
 }
+.hung{
+  display: none;  
+}
+#xxx2{
+  display: none;
+}

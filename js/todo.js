@@ -1,33 +1,44 @@
 const STATUS = { COMPLETE: 'complete', INCOMPLETE: 'incomplete' };
 
 class ToDoItem {
-    constructor(obj){
+    constructor(obj) {
+        this.id_task = obj.id_task;
         this.task = obj.task;
         this.isComplete = obj.isComplete ? obj.isComplete : STATUS.INCOMPLETE;
     }
-    setTaskName(task){
+    setId(ID) {
+        this.id_task = ID;
+    }
+    getId() { return this.id_task; }
+    setTaskName(task) {
         this.task = task;
     }
-    getTaskName(){return this.task;}
-    setIsComplete(isComplete){this.isComplete=isComplete;}
-    getIsComplete(){return this.isComplete;}
-    generateTaskHtml(index) {
+    getTaskName() { return this.task; }
+    setIsComplete(isComplete) { this.isComplete = isComplete; }
+    getIsComplete() { return this.isComplete; }
+    generateTaskHtml(task, index) {
         return `
             <li class="list-group-item checkbox">
             <div class="row">
                 <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 checkbox">
-                <label><input id="checkTodoStatus" type="checkbox" value="" class="" ${this.isComplete === STATUS.COMPLETE ? 'checked' : ''}></label>
+                <label><input id="checkTodoStatus" type="checkbox" value="" onChange="toDoList.checkTodoStatus(${index})" class="" ${this.isComplete === STATUS.COMPLETE ? 'checked' : ''}></label>
                 </div>
-                <div class="col-md-10 col-xs-10 col-lg-10 col-sm-10 task-text ${this.isComplete === STATUS.COMPLETE ? 'complete' : ''}">
-                ${this.task}
+                <div ondblclick="toDoList.sukien()" class="col-md-9 col-xs-9 col-lg-9 col-sm-9 task-text ${this.isComplete === STATUS.COMPLETE ? 'complete' : ''}">
+                        <p id="x2">${this.task}</p>
+                        <input  id="xxx" class="hung" type="text" value="${this.task}"></input>
+                        <button id="xxx2" class="btn btn-success hung2" onClick="toDoList.edittask(${index})"></button>
                 </div>
                 <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 delete-icon-area">
-                <a class="" href="" ><i id="deleteTaskTodoList" data-id="${index}" class="delete-icon glyphicon glyphicon-trash"></i></a>
+                <a class="" href="" onClick="toDoList.deleteTaskTodoList(event, ${index})" ><i id="deleteTaskTodoList" data-id="${index}" class="delete-icon glyphicon glyphicon-trash"></i></a>
+                </div>
+                <div class="col-md-1 col-xs-1 col-lg-1 col-sm-1 delete-icon-area">
+               
                 </div>
             </div>
             </li>
         `;
     }
+
 }
 
 class ToDoClass {
@@ -42,7 +53,35 @@ class ToDoClass {
 
         this.loadToDoList();
         this.addEventListener();
+
     }
+
+    sukien(xxx) {
+
+        document.getElementById("xxx").style.display = "block";
+        document.getElementById("xxx2").style.display = "block";
+        document.getElementById("x2").style.display = "none";
+    }
+
+    edittask(index) {
+        //var name1 = document.getElementsByTagName('p')[0].innerHTML;
+        var name = document.getElementById("xxx").value;
+        this.tasks.splice(index, 1);
+        console.log(this.tasks.length);
+
+
+        let todoItem1 = new ToDoItem({
+            id_task: Math.random(),
+            task: name,
+            isComplete: STATUS.INCOMPLETE
+        });
+
+        this.tasks.push(todoItem1);
+
+        this.loadToDoList();
+
+    }
+
 
     addEventListener() {
         document.getElementById('addTask').addEventListener('keypress', event => {
@@ -51,7 +90,10 @@ class ToDoClass {
                 event.target.value = "";
             }
         });
+
     }
+
+
 
     //check: checkbox status--
     //index: The position of each line in the array task_value 
@@ -66,7 +108,6 @@ class ToDoClass {
 
         this.loadToDoList();
     }
-
     addTaskClick() {
         let target = document.getElementById('addTask');
         this.addTask(target.value);
@@ -74,11 +115,11 @@ class ToDoClass {
     }
 
     addTask(task) {
-       /*  const newTask = {
-            task,
-            isComplete: false,
-        }; */
-        
+        /*  const newTask = {
+             task,
+             isComplete: false,
+         }; */
+
         //parent div is simply uses to add the effects around the insert label if there is a text or not
         let parentDiv = document.getElementById('addTask').parentElement;
         if (task === '') {
@@ -90,9 +131,10 @@ class ToDoClass {
             //add first: unshift()  
             //add last: push()
             const todoItem = new ToDoItem({
+                id_task: Math.random(),
                 task, isComplete: STATUS.INCOMPLETE
             });
-           
+
             this.tasks.push(todoItem);
             this.loadToDoList();
         }
@@ -117,8 +159,6 @@ class ToDoClass {
         this.load_gen(list_complete);
     }
 
-    
-    
     //load all task
     loadToDoList() {
         //var tasks= {task: "Review code", isComplete: false}
@@ -127,15 +167,15 @@ class ToDoClass {
         localStorage.setItem('TASK_ID', JSON.stringify(this.tasks));
         let total_task = "Total: " + this.tasks.length + " tasks";
         document.getElementById('total_task').innerHTML = total_task;
-        let taskHtml = this.tasks.reduce((html, task, index) => html += task.generateTaskHtml(index), '');
+        let taskHtml = this.tasks.reduce((html, task, index) => html += task.generateTaskHtml(task, index), '');
         document.getElementById('taskList').innerHTML = taskHtml;
     }
-    
-    
+
+    //load active, completed
     load_gen(list) {
         localStorage.setItem('TASK_ID', JSON.stringify(this.tasks));
         let total_task = "Total: " + this.tasks.length + " tasks";
-        let taskHtml2 = list.reduce((html, task, index) => html += this.generateTaskHtml(task, index), '');
+        let taskHtml2 = list.reduce((html, task, index) => html += task.generateTaskHtml(task, index), '');
         document.getElementById('taskList').innerHTML = taskHtml2;
     }
    
