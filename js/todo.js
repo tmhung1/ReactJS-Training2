@@ -82,7 +82,6 @@ class ToDoClass {
 
     }
 
-
     addEventListener() {
         document.getElementById('addTask').addEventListener('keypress', event => {
             if (event.keyCode == 13) {
@@ -92,16 +91,13 @@ class ToDoClass {
         });
 
     }
-
-
-
     //check: checkbox status--
     //index: The position of each line in the array task_value 
     checkTodoStatus(index) {
         this.tasks[index].isComplete = !this.tasks[index].isComplete;
         this.loadToDoList();
     }
-
+    
     deleteTaskTodoList(event, taskIndex) {
         event.preventDefault();
         this.tasks.splice(taskIndex, 1);
@@ -174,7 +170,6 @@ class ToDoClass {
     //load active, completed
     load_gen(list) {
         localStorage.setItem('TASK_ID', JSON.stringify(this.tasks));
-        let total_task = "Total: " + this.tasks.length + " tasks";
         let taskHtml2 = list.reduce((html, task, index) => html += task.generateTaskHtml(task, index), '');
         document.getElementById('taskList').innerHTML = taskHtml2;
     }
@@ -184,7 +179,7 @@ class ToDoClass {
 let toDoList;
 window.addEventListener("load", () => {
     toDoList = new ToDoClass();
-});
+})
 
 //check localstorage
 // if (typeof (Storage) !== 'undefined') {
