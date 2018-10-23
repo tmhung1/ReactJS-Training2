@@ -44,18 +44,9 @@ export const editTask = (task) => {
         task 
     }
 };
-export const filterTask = (filter) => {
-    return {
-        type : types.FILTER_TASK,
-        filter 
-    }
-};
-export const searchTask = (name) => {
-    return {
-        type : types.SEARCH_TASK,
-        name 
-    }
-};
+
+
+
 
 
 

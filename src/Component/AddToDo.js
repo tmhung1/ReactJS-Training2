@@ -44,9 +44,9 @@ class AddToDo extends Component {
         this.props.onCloseForm();
     }
     handleChange = (event) => {
-        var target = event.target;
-        var name = target.name;
-        var value = target.value;
+        let target = event.target;
+        let name = target.name;
+        let value = target.value;
         if (name === 'txtStatus') {
             value = target.value === 'true' ? true : false;
         }
@@ -65,7 +65,7 @@ class AddToDo extends Component {
         this.props.onCloseForm();
     }
     render() {
-        var { id , txtName , txtStatus } = this.state;
+        const { id , txtName , txtStatus } = this.state;
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
@@ -76,7 +76,7 @@ class AddToDo extends Component {
                 </div>
                 <div className="panel-body">
                     <form onSubmit={ this.onSubmitToDo } >
-                        /** input : name */
+                       
                         <div className="form-group">
                             <label> Name :</label>
                             <input

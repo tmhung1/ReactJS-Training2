@@ -1,7 +1,7 @@
 import * as types from '../Constants/ActionTypes';
 
-var initialState = false;   //close form
-var myReducer = (state = initialState, action) => {
+let initialState = false;   //close form
+const myReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.TOGGLE_FORM:
             return !state;

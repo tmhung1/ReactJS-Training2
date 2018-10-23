@@ -18,7 +18,7 @@ class ToDoItem extends Component {
         this.props.onUpdateItem(this.props.task);
     }
     render() {
-        var { task, index } = this.props;  
+        const { task, index } = this.props;  
         return (
             <tr>
                 <td>{index}</td>
@@ -26,7 +26,7 @@ class ToDoItem extends Component {
                 <td className="text-center">
                     <span
                         onClick={this.onUpdateStatus}
-                        className={task.txtStatus === true ? 'label label-success' : 'label label-danger'}>
+                        className={task.txtStatus === true ? 'label-success' : 'label-danger'}>
                         {task.txtStatus === true ? 'Completed' : 'Active'}</span>
                 </td>
                 <td className="text-center">

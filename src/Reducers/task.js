@@ -1,13 +1,13 @@
 import * as types from './../Constants/ActionTypes';
 
 //random id 
-var generateID = () => {
-    var randomstring = require("random-string");
+let generateID = () => {
+    let randomstring = require("random-string");
     return randomstring({ length: 20 });
 }
 
-var findIndex = (tasks, id) => {
-    var result = -1;
+let findIndex = (tasks, id) => {
+    let result = -1;
     tasks.forEach((item, index) => {
         if (item.id === id) {
             result = index;
@@ -16,18 +16,18 @@ var findIndex = (tasks, id) => {
     return result;
 }
 
-var data = JSON.parse(localStorage.getItem('TASK_ID'));
-var initialState = data ? data : [];
+const data = JSON.parse(localStorage.getItem('TASK_ID'));
+let initialState = data ? data : [];
 
-var myReducer = (state = initialState, action) => {
-    var id = '';
-    var index = -1;
+const myReducer = (state = initialState, action) => {
+    let id = '';
+    let index = -1;
     switch (action.type) {
         case types.LIST_ALL:
             return state;
 
         case types.ADDTASK:
-            var task = {
+            let task = {
                 id: action.task.id,
                 txtName: action.task.txtName,
                 txtStatus: (action.task.txtStatus === 'true' || action.task.txtStatus === true) ? true : false
@@ -45,7 +45,7 @@ var myReducer = (state = initialState, action) => {
         case types.UPDATE_STATUS_TASK:
             id = action.id;
             index = findIndex(state, id);
-            var todoItem = { ...state[index]};
+            let todoItem = { ...state[index]};
             todoItem.txtStatus = !todoItem.txtStatus;
             state[index] = todoItem;
             localStorage.setItem('TASK_ID', JSON.stringify(state));
