@@ -57,7 +57,30 @@ const myReducer = (state = initialState, action) => {
             state.splice(index, 1);
             localStorage.setItem('TASK_ID', JSON.stringify(state));
             return [...state];
-
+        case types.ADDTASK2 : 
+            let newTask ={
+                id : generateID(),
+                txtName : action.task2.txtName,
+                txtStatus: (action.task2.txtStatus === 'true' || action.task2.txtStatus === true) ? true : false
+            }
+            state.push(newTask);
+            localStorage.setItem('TASK_ID', JSON.stringify(state));
+            return [...state];
+        case types.UPDATETASK2 : 
+            let task_update = {
+                id: action.task2.id,
+                txtName: action.task2.txtName,
+                txtStatus: (action.task2.txtStatus === 'true' || action.task2.txtStatus === true) ? true : false
+            };
+            index = findIndex(state, task_update.id);
+            if(task_update.txtName === "")
+            {
+                state.splice(index, 1);
+            }else{
+                state[index] = task_update;
+            }
+            localStorage.setItem('TASK_ID', JSON.stringify(state));
+            return [...state];
         default: return state;
     }
 }

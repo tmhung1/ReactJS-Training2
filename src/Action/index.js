@@ -5,27 +5,6 @@ export const listAll = () => {
         type : types.LIST_ALL
     }
 };
-export const addTask = (task) => {
-    return {
-        type : types.ADDTASK,
-        task
-    }
-};
-export const toggleForm = () => {
-    return {
-        type : types.TOGGLE_FORM
-    }
-};
-export const closeForm = () => {
-    return {
-        type : types.CLOSE_FORM
-    }
-};
-export const openForm = () => {
-    return {
-        type : types.OPEN_FORM
-    }
-};
 export const updateStatusTask = (id) => {
     return {
         type : types.UPDATE_STATUS_TASK,
@@ -38,10 +17,16 @@ export const deleteTask = (id) => {
         id
     }
 };
-export const editTask = (task) => {
+export const addTask2 = (task2) => {
     return {
-        type : types.EDIT_TASK,
-        task 
+        type : types.ADDTASK2,
+        task2
+    }
+};
+export const updateTask2 = (task2) => {
+    return {
+        type : types.UPDATETASK2,
+        task2
     }
 };
 

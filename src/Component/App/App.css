@@ -96,3 +96,16 @@ ul li {
   width: 80px;
   text-align: center;
 }
+.namDB2{
+  display: none;
+  width: 300px;
+  height: 23px;
+}
+.ccc{
+  width: 300px;
+  height: 23px;
+  background: #2bce2b
+}
+.xxx{
+  display: block;
+}

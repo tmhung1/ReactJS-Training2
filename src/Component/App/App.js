@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import AddToDo from './../AddToDo';
 import * as actions from './../../Action/index'
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch , HashRouter} from 'react-router-dom';
@@ -10,30 +9,25 @@ import routes from './../../routes';
 class App extends Component {
   
     constructor(props) {
-      super(props);
-    }
-    //toggle add todo form 
-    onClickAddToDo = () => {
-      const { task_edit } = this.props;
-      if (task_edit && task_edit.id !== '') {
-        this.onOpenForm();
-      }
-      else {
-        this.props.onToggleForm();
-      }
-      this.props.onClearTask
-        ({
+        super(props);
+        this.state = {
           id: '',
           txtName: '',
           txtStatus: false
-        });
+      };
     }
-    onOpenForm = () => {
-      this.props.isFormdisplay;
+    //add todo item
+    keyPress = (e) =>{
+      if(e.keyCode ===13)
+      {
+        this.setState({
+          id : '',
+          txtName : e.target.value,
+          txtStatus : false
+        },function(){this.props.onAddTask2(this.state)});
+      }
     }
     render() {
-      const { isFormdisplay } = this.props;
-      const elmAddToDo = isFormdisplay ? <AddToDo /> : '';
       return (
         <HashRouter>
           <div className="container">
@@ -41,11 +35,8 @@ class App extends Component {
                   <hr></hr>
               </div>
               <div className="row">
-                  <div className={isFormdisplay ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4 ' : ''}>
-                      {elmAddToDo}
-                  </div>
-                  <div className={isFormdisplay ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
-                      <button className="btn btn-primary" onClick={this.onClickAddToDo}>Add to do</button>  
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                      <input onKeyDown={this.keyPress} type="text" placeholder="What needs to be done? " class="form-control class_input" id="addTask"/>
                       <Menu/>
                       <Switch>
                         {this.showRoute(routes)}
@@ -69,24 +60,12 @@ class App extends Component {
     }
 }
   const mapStatetoProps = (state) => {
-    return {
-      isFormdisplay: state.dform,
-      task_edit: state.task_edit
-    }
+    return {}
   };
   const mapDispatchToProps = (dispatch, props) => {
     return {
-      onToggleForm: () => {
-        dispatch(actions.toggleForm());
-      },
-      onCloseForm: () => {
-        dispatch(actions.closeForm());
-      },
-      onOpenForm: () => {
-        dispatch(actions.openForm());
-      },
-      onClearTask: (task) => {
-        dispatch(actions.editTask(task));
+      onAddTask2 : (task2) =>{
+        dispatch(actions.addTask2(task2));
       }
     }
   };

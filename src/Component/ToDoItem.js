@@ -3,7 +3,15 @@ import {connect} from 'react-redux';
 import * as actions from './../Action/index';
 
 class ToDoItem extends Component {
-
+    constructor(props)
+    {
+        super(props);
+        this.state = {
+            id: '',
+            txtName: '',
+            txtStatus: false
+        };
+    }
     onUpdateStatus = () => 
     {
        this.props.onUpdateStatus(this.props.task.id);
@@ -12,17 +20,38 @@ class ToDoItem extends Component {
     {
         this.props.onDeleteItem(this.props.task.id);
     }
-    onUpdateItem = () =>
-    {
-        this.props.onOpenForm();
-        this.props.onUpdateItem(this.props.task);
+    onDoubleClick = (e) =>{
+        const { task } = this.props;  
+        e.preventDefault();
+        let t= document.getElementById("namDB" +`${task.id}`);
+        let t2= document.getElementById("namDB2" +`${task.id}`);
+        t.style.display = 'none';
+        t2.style.display = 'block'; 
     }
+    keyPress = (e) =>{
+        const { task } = this.props;  
+        let t= document.getElementById("namDB" +`${task.id}`);
+        let t2= document.getElementById("namDB2" +`${task.id}`);
+        if(e.keyCode === 13)
+        {
+          this.setState({
+            id : t2.getAttribute("data-id"),
+            txtName : e.target.value,
+            txtStatus : t.getAttribute("data-status")
+          },function(){this.props.onUpdateTask(this.state)});
+          t.style.display = 'block';
+          t2.style.display = 'none';
+        }  
+      }
     render() {
         const { task, index } = this.props;  
         return (
             <tr>
                 <td>{index}</td>
-                <td className={task.txtStatus ? 'complete' : ''}>{task.txtName}</td>
+                <td>
+                    <p data-status={task.txtStatus}  id={"namDB" +`${task.id}`} onDoubleClick={this.onDoubleClick} className={task.txtStatus ? 'complete' : ''}>{task.txtName}</p>
+                    <input className="namDB2" data-id={task.id} type="text" id={"namDB2" + `${task.id}` } onKeyDown={this.keyPress} ></input>
+                </td>
                 <td className="text-center">
                     <span
                         onClick={this.onUpdateStatus}
@@ -30,13 +59,6 @@ class ToDoItem extends Component {
                         {task.txtStatus === true ? 'Completed' : 'Active'}</span>
                 </td>
                 <td className="text-center">
-                    <button
-                        type="button"
-                        className="btn btn-warning"
-                        onClick = {this.onUpdateItem}>
-                        <span className="fa fa-pencil mr-5"></span>Sửa
-                    </button>
-                    &nbsp;
                     <button
                         onClick={this.onDeleteItem}
                         type="button" 
@@ -59,11 +81,8 @@ class ToDoItem extends Component {
         onDeleteItem : (id) => {
             dispatch(actions.deleteTask(id));
         },
-        onUpdateItem : (task) => {
-            dispatch(actions.editTask(task));
-        },
-        onOpenForm : () => {
-            dispatch(actions.openForm());
+        onUpdateTask : (task2) =>{
+            dispatch(actions.updateTask2(task2));
         }
         }
     };
